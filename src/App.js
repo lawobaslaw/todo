@@ -7,8 +7,18 @@ function App() {
  const addedTask = useRef();
  /**To get from todo list */
 
+
+ useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
+  if (storedTodos) {setTodos(storedTodos);
+    
+  }
+ }, []);
+
  /**To save to local storage*/
+ const LOCAL_STORAGE_KEY ='john.white';
 useEffect(() => {
+  localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify(todos))
  }, [todos]);
 
 
@@ -24,13 +34,18 @@ useEffect(() => {
 setTodos(prevTodos => [...prevTodos, newTask ])
 addedTask.current.value="";
  }
-
-
+ /**To toggle completed */
+const toggleTodo =(id)=> {
+  const newTodos = [...todos];
+  const todo = newTodos.find(todo=> todo.id===id);
+  todo.completed=!todo.completed;
+  setTodos(newTodos);
+}
 
   return (
     <div>
     <h1>TODO APP</h1>
-    <TodoList todos={todos}/>
+    <TodoList todos={todos} toggleTodo={toggleTodo}/>
     <input ref={addedTask} type="text"/>
     <button onClick={addTodo}>Add Todo</button>
     <button>Clear Completed</button>
